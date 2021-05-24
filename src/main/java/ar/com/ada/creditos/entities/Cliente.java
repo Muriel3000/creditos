@@ -1,13 +1,14 @@
 package ar.com.ada.creditos.entities;
 
 
-import java.util.Date;
+import java.util.*;
 
 import javax.persistence.*;
 
 import org.hibernate.annotations.NaturalId;
 
 import ar.com.ada.creditos.excepciones.*;
+
 
 @Entity
 @Table(name = "cliente")
@@ -31,6 +32,9 @@ public class Cliente {
     @Temporal(TemporalType.DATE) //SOLO Poner esto si no queremos manejar HORA en el DB Server.
     private Date fechaNacimiento;
     
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
+    public List <Prestamo> prestamos = new ArrayList<>();
+
     public Cliente(String nombre) {
         this.nombre = nombre;
 
