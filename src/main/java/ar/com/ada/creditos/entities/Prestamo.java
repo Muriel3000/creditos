@@ -1,15 +1,12 @@
 package ar.com.ada.creditos.entities;
 
 import java.util.*;
-import java.lang.annotation.Inherited;
 import java.math.*;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "prestamo")
 public class Prestamo {
-    
-    /// completar
 
     @Id
     @Column(name = "prestamo_id")
@@ -18,6 +15,17 @@ public class Prestamo {
 
     @Temporal(TemporalType.DATE)
     private Date fecha;
+
+    private BigDecimal importe;
+
+    private int cuotas;
+
+    @Column(name = "fecha_alta")
+    private Date fechaAlta;
+
+    @ManyToOne // join columns, van donde está FK
+    @JoinColumn(name = "ciente_id", referencedColumnName = "ciente_id")
+    private Cliente cliente;
 
     public int getPrestamoId() {
         return prestamoId;
@@ -65,15 +73,10 @@ public class Prestamo {
 
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
+        this.cliente.agregarPrestamo(this); // relacion bidireccional
     }
 
-    private BigDecimal importe;
-    private int cuotas;
 
-    @Column(name = "fecha_alta")
-    private Date fechaAlta;
-
-    private Cliente cliente;
-
+   
 
 }
