@@ -109,6 +109,7 @@ public class Cliente {
         this.prestamos = prestamos;
     }
 
+    // Cuando se crea el cliente y se agrega el primer prestamo
     public void agregarPrestamo(Prestamo prestamo) {
         this.prestamos.add(prestamo);
     }

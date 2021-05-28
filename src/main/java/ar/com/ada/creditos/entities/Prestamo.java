@@ -24,7 +24,7 @@ public class Prestamo {
     private Date fechaAlta;
 
     @ManyToOne // join columns, van donde está FK
-    @JoinColumn(name = "ciente_id", referencedColumnName = "ciente_id")
+    @JoinColumn(name = "cliente_id", referencedColumnName = "cliente_id")
     private Cliente cliente;
 
     public int getPrestamoId() {
@@ -71,10 +71,12 @@ public class Prestamo {
         return cliente;
     }
 
+    // Con cliente ya registrado, agregar prestamo
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         this.cliente.agregarPrestamo(this); // relacion bidireccional
     }
+
 
 
    
