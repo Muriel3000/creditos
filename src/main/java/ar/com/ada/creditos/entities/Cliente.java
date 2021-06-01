@@ -5,6 +5,8 @@ import java.util.*;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 import org.hibernate.annotations.NaturalId;
 
 import ar.com.ada.creditos.excepciones.*;
@@ -32,6 +34,7 @@ public class Cliente {
     @Temporal(TemporalType.DATE) //SOLO Poner esto si no queremos manejar HORA en el DB Server.
     private Date fechaNacimiento;
     
+    @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL) //de uno a muchos
     public List <Prestamo> prestamos = new ArrayList<>();
 
