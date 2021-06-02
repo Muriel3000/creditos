@@ -348,7 +348,8 @@ public class ABM {
         String fechaStr = formatter.format(prestamo.getFecha());
         String fechaAltaStr = formatter.format(prestamo.getFechaAlta());
 
-        System.out.println(" Fecha: " + fechaStr + " Fecha Alta: " + fechaAltaStr);
+        System.out.println("Fecha: " + fechaStr + " Fecha Alta: " + fechaAltaStr);
+        System.out.println("Estado: " + prestamo.getEstadoId());
     }
 
    
