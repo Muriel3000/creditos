@@ -111,7 +111,7 @@ public class ClienteManager {
 
     }
 
-    /**
+     /**
      * Busca una lista de clientes por el nombre completo Esta armado para que se
      * pueda generar un SQL Injection y mostrar commo NO debe programarse.
      * 
@@ -126,13 +126,50 @@ public class ClienteManager {
         // Deberia traer solo aquella del nombre y con esto demostrarmos que trae todas
         // si pasamos
         // como nombre: "' or '1'='1"
-        Query query = session.createNativeQuery("SELECT * FROM cliente where nombre = '" + nombre + "'", Cliente.class);
+        //quedaria asi: SELECT * FROM cliente where nombre = '' or '1'='1'
+        Query query = session.createNativeQuery("SELECT * FROM cliente where nombre = '" + nombre + "'", 
+        Cliente.class);
+        List<Cliente> clientesHackeado = query.getResultList();
 
-        List<Cliente> clientes = query.getResultList();
+        //Version Corregida con Parametros SQL
+        //quedaria asi: SELECT * FROM cliente where nombre = ''' or ''1''=''1'
+        Query queryConParametrosSql = session.createNativeQuery("SELECT * FROM cliente where nombre = ?",
+        Cliente.class);
+        queryConParametrosSql.setParameter(1, nombre);
+        List<Cliente> clientesDeQueryConParametrosSQL = queryConParametrosSql.getResultList();
 
-        return clientes;
+        //Version usando JPQL: seleccionamos OBJETOS
+        Query queryConJPQL = session.createQuery("SELECT c FROM Cliente c where c.nombre = :nombreFiltro",
+        Cliente.class);
+        queryConJPQL.setParameter("nombreFiltro", nombre);
+        List<Cliente> clientesDeJPQL = queryConJPQL.getResultList();
+
+        return clientesDeJPQL;
+    }
+
+    //Cuenta cantidad de clientes
+    public int contarClienteQueryNativa(){
+        Session session = sessionFactory.openSession();
+
+        Query query = session.createNativeQuery("SELECT count(*) FROM cliente");
+
+        int resultado = ((Number)query.getSingleResult()).intValue();
+
+        return resultado;
 
     }
 
+    //Cuenta cantidad de clientes
+    public int contarClienteJPQL(){
+        Session session = sessionFactory.openSession();
+
+        Query query = session.createQuery("SELECT count(c) FROM Cliente c");
+
+        int resultado = ((Number)query.getSingleResult()).intValue();
+
+        return resultado;
+
+    }
+    
 
 }

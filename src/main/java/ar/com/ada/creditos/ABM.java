@@ -11,6 +11,8 @@ import ar.com.ada.creditos.entities.*;
 import ar.com.ada.creditos.excepciones.*;
 import ar.com.ada.creditos.managers.*;
 
+// REVISAR MANAGERS Y ENTITIES.REPORTES.CantClientePrestamos
+// REVISA ABM
 public class ABM {
 
     public static Scanner Teclado = new Scanner(System.in);
@@ -65,7 +67,12 @@ public class ABM {
                     case 7:
                         mostrarPrestamos();
                         break; 
-
+                    case 8:
+                        listarPrestCliente();
+                        break;
+                    case 9:
+                        cancelarPrestamo();
+                        break;
                     default:
                         System.out.println("La opcion no es correcta.");
                         break;
@@ -116,23 +123,7 @@ public class ABM {
         cliente.setFechaNacimiento(fecha);
 
         //Ponerle un prestamo de 10mil a un cliente recien creado.
-
         this.crearYAsignarPrestamo(cliente);
-        /* Prestamo prestamo = new Prestamo();
-
-        System.out.println("Ingrese el importe del prestamo solicitado: ");
-        prestamo.setImporte(Teclado.nextBigDecimal());
-        System.out.println("Ingrese la cantidad de cuotas que desea abonar: ");
-        prestamo.setCuotas(Teclado.nextInt());
-        Teclado.nextLine();
-        System.out.println("Ingrese fecha de otorgamiento del credito(dd/mm/yy): ");
-        fecha = dateformatArgentina.parse(Teclado.nextLine());
-        prestamo.setFecha(fecha);
-        //prestamo.setImporte(new BigDecimal(10000));
-        //prestamo.setCuotas(5);
-        //prestamo.setFecha(new Date());
-        prestamo.setFechaAlta(new Date());
-        prestamo.setCliente(cliente);  */
 
         ABMCliente.create(cliente); 
 
@@ -190,8 +181,6 @@ public class ABM {
     }
 
     public void modifica() throws Exception {
-        // System.out.println("Ingrese el nombre de la cliente a modificar:");
-        // String n = Teclado.nextLine();
 
         System.out.println("Ingrese el ID de la cliente a modificar:");
         int id = Teclado.nextInt();
@@ -243,7 +232,7 @@ public class ABM {
                     break;
             }
 
-            // Teclado.nextLine();
+            Teclado.nextLine();
 
             ABMCliente.update(clienteEncontrado);
 
@@ -261,6 +250,9 @@ public class ABM {
         for (Cliente c : todos) {
             mostrarCliente(c);
         }
+        // Nuevo - ANALIZAR Y ACTIVAR
+         int cantidadClientes = ABMCliente.contarClienteJPQL();
+        System.out.println("La cantidad de clientes totales es: "+ cantidadClientes);
     }
 
     public void listarPorNombre() {
@@ -305,12 +297,14 @@ public class ABM {
         }
     }
 
-    // alta + asignarPrestamo
+    // alta - asignarPrestamo
     public void crearYAsignarPrestamo(Cliente cliente) {
         Prestamo prestamo = new Prestamo();
 
         System.out.println("Ingrese el importe del prestamo solicitado: ");
-        prestamo.setImporte(Teclado.nextBigDecimal());
+        // int y decimal, por la declaracion de atributo
+        prestamo.setImporte(new BigDecimal(Teclado.nextInt()));
+        //prestamo.setImporte(Teclado.nextBigDecimal());
         System.out.println("Ingrese la cantidad de cuotas que desea abonar: ");
         prestamo.setCuotas(Teclado.nextInt());
         Teclado.nextLine();
@@ -327,6 +321,8 @@ public class ABM {
         }
         
         prestamo.setFechaAlta(new Date());
+        // Para asignar un estado que no sea 'Solicitado':
+        // prestamo.setEstadoId(EstadoPrestamoEnum.APROBADO);
         prestamo.setCliente(cliente);
     }
     
@@ -352,8 +348,23 @@ public class ABM {
         System.out.println("Estado: " + prestamo.getEstadoId());
     }
 
-   
+    public void listarPrestCliente() {
+        System.out.println("Ingrese DNI del cliente: ");
+        int dni = Teclado.nextInt();
+        Cliente cliente = ABMCliente.readByDNI(dni);
+        List<Prestamo> prestamos = ABMPrestamo.buscarPrestamos(cliente);
+        for (Prestamo p : prestamos) {
+            mostrarPrestamo(p);
+        }
+    }
 
+    public void cancelarPrestamo() {
+        System.out.println("Ingrese ID del prestamo: ");
+        int prestamoId = Teclado.nextInt();
+        Prestamo prestamo = ABMPrestamo.read(prestamoId);
+
+    }
+   
     public static void printOpciones() {
         System.out.println("=======================================");
         System.out.println("");
@@ -362,8 +373,10 @@ public class ABM {
         System.out.println("3. Para modificar un cliente.");
         System.out.println("4. Para ver el listado.");
         System.out.println("5. Buscar un cliente por nombre especifico(SQL Injection)).");
-        System.out.println("6. Asignar prestamo a un cliente existente");
+        System.out.println("6. Asignar prestamo a un cliente existente.");
         System.out.println("7. Para ver listado de prestamos.");
+        System.out.println("8. Para ver prestamos del cliente");
+        System.out.println("9. Para cancelar un prestamo.");
         System.out.println("0. Para terminar.");
         System.out.println("");
         System.out.println("=======================================");

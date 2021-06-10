@@ -60,27 +60,18 @@ public class PrestamoManager {
         return prestamo;
     }
 
-    public void update(Prestamo prestamo) {
+    // FORMA DIFERENTE
+    /*  public Prestamo readByPrestamoId(int prestamoId) {
+            Session session = sessionFactory.openSession();
 
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
+            Prestamo prestamo = session.byNaturalId(Prestamo.class).using("prestamo_id", prestamoId).load();
 
-        session.update(prestamo);
+            session.close();
 
-        session.getTransaction().commit();
-        session.close();
-    }
+            return prestamo;
+        }
+    */
 
-    public void delete(Prestamo prestamo) {
-
-        Session session = sessionFactory.openSession();
-        session.beginTransaction();
-
-        session.delete(prestamo);
-
-        session.getTransaction().commit();
-        session.close();
-    }
 
     /**
      * Este metodo en la vida real no debe existir ya qeu puede haber miles de
@@ -100,7 +91,19 @@ public class PrestamoManager {
         List<Prestamo> todos = query.getResultList();
 
         return todos;
-
     }
 
+    public List<Prestamo> buscarPrestamos(Cliente cliente) {
+
+        Session session = sessionFactory.openSession();
+
+        Query queryConJPQL = session.createNativeQuery("SELECT * from prestamo where cliente_id = ?",
+         Prestamo.class);                     // NATIVE: SELECT *, ?, PARAMETROS CON NUMERO
+        queryConJPQL.setParameter(1, cliente.getClienteId());
+
+        List<Prestamo> prestamos = queryConJPQL.getResultList();
+
+        return prestamos;
+
+    }
 }

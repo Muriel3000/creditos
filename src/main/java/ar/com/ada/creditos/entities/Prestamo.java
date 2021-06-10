@@ -3,6 +3,8 @@ package ar.com.ada.creditos.entities;
 import java.util.*;
 import java.math.*;
 import javax.persistence.*;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name = "prestamo")
@@ -29,6 +31,10 @@ public class Prestamo {
 
     @Column(name = "estado_id")
     private int estadoId;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "prestamo", cascade = CascadeType.ALL)
+    public List<Cancelacion> cancelaciones = new ArrayList<>();
 
     public int getPrestamoId() {
         return prestamoId;
@@ -78,6 +84,17 @@ public class Prestamo {
     public void setCliente(Cliente cliente) {
         this.cliente = cliente;
         this.cliente.agregarPrestamo(this); // relacion bidireccional
+    }
+
+    public List<Cancelacion> getCancelaciones(){
+        return cancelaciones;
+    }
+    public void setCancelaciones(List<Cancelacion> cancelaciones){
+        this.cancelaciones = cancelaciones;
+    }
+    
+    public void agregarCancelacion(Cancelacion cancelacion){
+        this.cancelaciones.add(cancelacion);
     }
 
     // ENUMERADO
