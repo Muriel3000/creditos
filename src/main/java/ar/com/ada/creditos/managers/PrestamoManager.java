@@ -97,9 +97,13 @@ public class PrestamoManager {
 
         Session session = sessionFactory.openSession();
 
-        Query queryConJPQL = session.createNativeQuery("SELECT * from prestamo where cliente_id = ?",
+       /* Query queryConJPQL = session.createNativeQuery("SELECT * from prestamo where cliente_id = ?",
          Prestamo.class);                     // NATIVE: SELECT *, ?, PARAMETROS CON NUMERO
         queryConJPQL.setParameter(1, cliente.getClienteId());
+*/
+        Query queryConJPQL = session.createQuery("SELECT p from Prestamo p where cliente = :clienteFiltro",
+         Prestamo.class);                 
+        queryConJPQL.setParameter("clienteFiltro", cliente);
 
         List<Prestamo> prestamos = queryConJPQL.getResultList();
 

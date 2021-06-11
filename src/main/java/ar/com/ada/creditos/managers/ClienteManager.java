@@ -138,7 +138,7 @@ public class ClienteManager {
         queryConParametrosSql.setParameter(1, nombre);
         List<Cliente> clientesDeQueryConParametrosSQL = queryConParametrosSql.getResultList();
 
-        //Version usando JPQL: seleccionamos OBJETOS
+        //Version usando JPQL: seleccionamos OBJETOS (se escriben clases y atributos en la query)
         Query queryConJPQL = session.createQuery("SELECT c FROM Cliente c where c.nombre = :nombreFiltro",
         Cliente.class);
         queryConJPQL.setParameter("nombreFiltro", nombre);

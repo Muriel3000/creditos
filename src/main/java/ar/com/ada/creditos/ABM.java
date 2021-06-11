@@ -362,6 +362,7 @@ public class ABM {
         System.out.println("Ingrese ID del prestamo: ");
         int prestamoId = Teclado.nextInt();
         Prestamo prestamo = ABMPrestamo.read(prestamoId);
+        
 
     }
    
