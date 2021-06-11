@@ -17,7 +17,6 @@ public class Cancelacion {
     @Column(name = "cancelacion_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int cancelacionId;
-
     
     @ManyToOne
     @JoinColumn(name = "prestamo_id", referencedColumnName = "prestamo_id")

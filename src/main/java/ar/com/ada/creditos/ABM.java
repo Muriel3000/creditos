@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import ar.com.ada.creditos.entities.*;
+import ar.com.ada.creditos.entities.reportes.ReporteCantClientePrestamos;
 import ar.com.ada.creditos.excepciones.*;
 import ar.com.ada.creditos.managers.*;
 
@@ -19,6 +20,7 @@ public class ABM {
 
     protected ClienteManager ABMCliente = new ClienteManager();
     protected PrestamoManager ABMPrestamo = new PrestamoManager();
+    //protected ReporteManager ABMReporte = new ReporteManager();
 
     public void iniciar() throws Exception {
 
@@ -26,6 +28,7 @@ public class ABM {
 
             ABMCliente.setup();
             ABMPrestamo.setup();
+            //ABMReporte.setup();
 
             printOpciones();
 
@@ -73,6 +76,9 @@ public class ABM {
                     case 9:
                         cancelarPrestamo();
                         break;
+                  /*  case 10:
+                        verCantidad();
+                        break;*/
                     default:
                         System.out.println("La opcion no es correcta.");
                         break;
@@ -359,13 +365,31 @@ public class ABM {
     }
 
     public void cancelarPrestamo() {
+
         System.out.println("Ingrese ID del prestamo: ");
         int prestamoId = Teclado.nextInt();
         Prestamo prestamo = ABMPrestamo.read(prestamoId);
-        
 
+        Cancelacion cancelacion = new Cancelacion();
+        System.out.println("Ingrese numero de cuota: ");
+        cancelacion.setCuota(Teclado.nextInt());
+        System.out.println("Ingrese monto de cancelacion: ");
+        cancelacion.setImporte(new BigDecimal(Teclado.nextInt()));
+        cancelacion.setFechaCancelacion(new Date());
+        cancelacion.setPrestamo(prestamo);
+
+        ABMPrestamo.update(prestamo);
+
+        System.out.println("Su cancelacion ha sido exitosa!");
     }
    
+
+   /* public void verCantidad() {
+        ReporteManager repoManager = new ReporteManager();
+        ReporteCantClientePrestamos reporte = repoManager.getReporte();
+        System.out.println(reporte);
+    }*/
+
     public static void printOpciones() {
         System.out.println("=======================================");
         System.out.println("");

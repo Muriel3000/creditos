@@ -72,6 +72,17 @@ public class PrestamoManager {
         }
     */
 
+    public void update(Prestamo prestamo) {
+
+        Session session = sessionFactory.openSession();
+        session.beginTransaction();
+
+        session.update(prestamo);
+
+        session.getTransaction().commit();
+        session.close();
+    }
+
 
     /**
      * Este metodo en la vida real no debe existir ya qeu puede haber miles de
